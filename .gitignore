@@ -1,0 +1,12 @@
+macbridge
+*.o
+.omc/
+.DS_Store
+
+dist/
+
+# docs/ 는 **공개 웹사이트 발행 폴더**다. 내부 문서·계획서를 여기 두면
+# 사이트에 통째로 딸려 올라간다(2026-08-09: superpowers/ 11개 파일이
+# Tailscale IP 를 담은 채 들어 있었다). 설계 문서는 superpowers/ 로.
+docs/superpowers/
+docs/**/.omc/

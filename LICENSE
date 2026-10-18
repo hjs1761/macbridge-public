@@ -1,0 +1,86 @@
+macbridge 소프트웨어 사용 조건
+Copyright (c) 2026 hjs1761. All rights reserved.
+
+
+■ 현재 배포본은 무료 베타입니다
+
+   반응을 보기 위해 무료로 배포하고 있으며, 정식 버전은 유료로 전환될 수 있습니다.
+   전환 시에는 베타를 써 주신 분들께 미리 안내드립니다.
+
+
+■ 허용
+
+   1. 개인이 소유한 Mac 에 대수 제한 없이 설치하고 사용할 수 있습니다.
+      (이 소프트웨어는 두 대 이상에서 함께 동작해야 의미가 있으므로 대수를 제한하지
+       않습니다)
+   2. 회사·기관에서 업무 목적으로 사용할 수 있습니다.
+   3. 다운로드 페이지 링크를 자유롭게 공유할 수 있습니다.
+
+
+■ 금지
+
+   1. 설치 파일 자체의 재배포·판매·대여, 또는 다른 유료 제품이나 서비스에 포함하여
+      제공하는 행위
+   2. 역컴파일·역어셈블 및 그 밖의 리버스 엔지니어링
+   3. 저작권 표시의 제거 또는 변경
+   4. 이 소프트웨어를 기반으로 한 2차적 저작물의 작성 및 배포
+
+
+■ 소스 코드
+
+   소스 코드는 공개하지 않으며, 저작권자가 모든 권리를 보유합니다.
+
+
+■ 수집하지 않는 것
+
+   이 소프트웨어는 아래를 수집·저장·전송하지 않습니다.
+
+   - 키 입력 내용 (무엇을 입력했는지)
+   - 화면 내용, 파일, 클립보드
+   - 개인을 식별할 수 있는 정보
+
+   기기 사이에 오가는 것은 "지금 한글인지 영문인지"라는 구분뿐이며, 저작권자를 포함한
+   어떤 외부 서버로도 데이터를 보내지 않습니다.
+
+   이는 약속이 아니라 확인 가능한 사실입니다. 이 소프트웨어는 손쉬운 사용·입력 모니터링
+   권한을 요구하지 않으며, 그 권한 없이는 키 입력을 읽는 것 자체가 불가능합니다.
+   시스템 설정 → 개인정보 보호 및 보안 에서 직접 확인하실 수 있습니다.
+
+
+■ 보증의 부인 및 책임의 제한
+
+   이 소프트웨어는 "있는 그대로(AS IS)" 제공되며, 상품성, 특정 목적에의 적합성,
+   비침해에 대한 명시적 또는 묵시적 보증을 하지 않습니다.
+
+   이 소프트웨어의 사용 또는 사용 불능으로 인하여 발생한 어떠한 직접적·간접적·부수적·
+   결과적 손해에 대해서도 저작권자는 책임을 지지 않습니다.
+
+
+■ 문의
+
+   앱의 메뉴바 → 「문의하기…」 를 이용해 주세요. 무엇이 담기는지 보내기 전에 확인하실 수
+   있으며, 연결 코드는 담기지 않고 기기 이름·IP·다른 앱 이름은 가려서 나갑니다.
+   보내주신 정보는 문제 해결에만 쓰고 보관하지 않습니다.
+
+   메일로 직접 보내셔도 됩니다: hjs1761@gmail.com
+   버그 신고: https://github.com/hjs1761/macbridge-app/issues
+
+
+────────────────────────────────────────────────────────────────────────────
+English summary
+
+macbridge is proprietary software. Copyright (c) 2026 hjs1761.
+All rights reserved.
+
+Free during the beta period; paid licensing may follow.
+
+You MAY install it on any Mac you own, with no device limit, and use it for
+work. You MAY NOT redistribute the installer, sell or rent it, bundle it into
+another paid product, reverse-engineer it, or create derivative works.
+
+The software collects no keystrokes, screen contents, files, or personal data.
+It requires neither Accessibility nor Input Monitoring permission, so reading
+keystrokes is not technically possible.
+
+Provided AS IS, without warranty of any kind. The copyright holder is not
+liable for any damages arising from its use.

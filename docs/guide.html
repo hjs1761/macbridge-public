@@ -1,0 +1,497 @@
+<title>macbridge 가이드 — 설치부터 문제 해결까지</title>
+<meta name="description" content="macbridge 설치, 기기 연결, 자소분리 대처, 문제 해결 가이드.">
+
+<style>
+  :root {
+    --paper:      #F4F6F8;
+    --surface:    #FFFFFF;
+    --sunken:     #ECEFF3;
+    --ink:        #101319;
+    --muted:      #5C6474;
+    --line:       #DCE1E8;
+    --accent:     #1F5F5B;
+    --accent-ink: #FFFFFF;
+    --alert:      #C0431E;
+    --shadow:     0 1px 2px rgba(16,19,25,.05), 0 10px 32px rgba(16,19,25,.06);
+
+    --hero-bg:    #10131C;
+    --hero-ink:   #F2F4F8;
+    --hero-muted: #97A0B4;
+    --hero-line:  #262D3C;
+    --hero-glow:  #4FB3A6;
+
+    --f-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+              "Pretendard", system-ui, sans-serif;
+    --f-mono: "SF Mono", ui-monospace, Menlo, "Cascadia Mono", monospace;
+
+    --page:  1120px;
+    --prose: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0C0F14; --surface: #151A21; --sunken: #11151B;
+      --ink: #E9EDF3; --muted: #98A2B3; --line: #232B36;
+      --accent: #64C9BC; --accent-ink: #07211E; --alert: #EC7A50;
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.4);
+      --hero-bg: #0A0D14;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0C0F14; --surface: #151A21; --sunken: #11151B;
+    --ink: #E9EDF3; --muted: #98A2B3; --line: #232B36;
+    --accent: #64C9BC; --accent-ink: #07211E; --alert: #EC7A50;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 12px 34px rgba(0,0,0,.4);
+    --hero-bg: #0A0D14;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: var(--f-sans); font-size: 17px; line-height: 1.75;
+         -webkit-font-smoothing: antialiased; }
+  .page { max-width: var(--page); margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+  .prose { max-width: var(--prose); }
+
+  h1,h2,h3 { margin: 0; letter-spacing: -.025em; text-wrap: balance; }
+  h1 { font-size: clamp(2.1rem, 5.4vw, 3.2rem); font-weight: 700; line-height: 1.12; }
+  h2 { font-size: clamp(1.45rem, 3.2vw, 2rem); font-weight: 680; line-height: 1.24; }
+  h3 { font-size: 1.06rem; font-weight: 650; }
+  p  { margin: 0; }
+  a  { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  .eyebrow { font-family: var(--f-mono); font-size: .74rem; letter-spacing: .15em;
+             text-transform: uppercase; color: var(--muted); }
+  .lede { font-size: clamp(1.02rem, 2vw, 1.18rem); color: var(--muted); line-height: 1.62; }
+
+  /* 상단 바 */
+  .topbar { background: var(--hero-bg); color: var(--hero-ink); }
+  .topbar .page { display: flex; align-items: center; gap: 1.2rem;
+                  padding-top: 1rem; padding-bottom: 1rem; flex-wrap: wrap; }
+  .brand { font-weight: 700; letter-spacing: -.02em; text-decoration: none; color: var(--hero-ink); }
+  .topbar .sp { flex: 1; }
+  .topbar a.link { color: var(--hero-muted); text-decoration: none; font-size: .92rem; }
+  .topbar a.link:hover { color: var(--hero-ink); }
+
+  /* 헤더 */
+  .masthead { background: var(--hero-bg); color: var(--hero-ink);
+              padding: clamp(2.5rem,6vw,4rem) 0 clamp(3rem,7vw,4.5rem); }
+  .masthead h1 { color: var(--hero-ink); }
+  .masthead .eyebrow, .masthead .lede { color: var(--hero-muted); }
+  .masthead .inner { display: flex; flex-direction: column; gap: .9rem; max-width: var(--prose); }
+
+  /* 목차 */
+  .toc { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+         box-shadow: var(--shadow); margin: -2.2rem auto 0; position: relative;
+         padding: .9rem 1.1rem; display: flex; flex-wrap: wrap; gap: .35rem .5rem; }
+  .toc a { text-decoration: none; font-size: .9rem; padding: .3rem .7rem;
+           border-radius: 8px; color: var(--muted); }
+  .toc a:hover { background: var(--sunken); color: var(--ink); }
+
+  section.band { padding: clamp(3rem, 6vw, 4.5rem) 0; }
+  section.band.sunken { background: var(--sunken); }
+  section.band > .page { display: flex; flex-direction: column; gap: 1.4rem; }
+  .head { display: flex; flex-direction: column; gap: .7rem; }
+  .sub  { margin-top: 1.6rem; display: flex; flex-direction: column; gap: .8rem; }
+
+  kbd { font-family: var(--f-mono); font-size: .84em; font-weight: 600;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 5px; padding: .12em .45em; color: var(--ink); }
+  code { font-family: var(--f-mono); font-size: .88em; }
+
+  /* 단계 — 순서가 정보인 곳에만 */
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s;
+             display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 860px) { ol.steps { grid-template-columns: repeat(3, 1fr); } }
+  ol.steps > li { counter-increment: s; background: var(--surface);
+                  border: 1px solid var(--line); border-radius: 14px; padding: 1.2rem;
+                  display: flex; flex-direction: column; gap: .5rem; }
+  ol.steps > li::before {
+    content: counter(s); font-family: var(--f-mono); font-size: .8rem; font-weight: 700;
+    color: var(--accent-ink); background: var(--accent);
+    width: 1.7rem; height: 1.7rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.steps p { font-size: .93rem; color: var(--muted); }
+
+  ul.plain { margin: 0; padding-left: 1.15rem; display: flex; flex-direction: column; gap: .55rem; }
+  ul.plain li { color: var(--muted); }
+  ul.plain b { color: var(--ink); }
+
+  .callout { border-left: 3px solid var(--line); padding: .15rem 0 .15rem 1.1rem;
+             color: var(--muted); font-size: .95rem; max-width: var(--prose); }
+  .callout.warn { border-left-color: var(--alert); }
+  .callout.tip  { border-left-color: var(--accent); }
+  .callout b { color: var(--ink); }
+  ol.inline-steps { margin: .6rem 0; padding-left: 1.3rem;
+                    display: flex; flex-direction: column; gap: .45rem; }
+  ol.inline-steps li { padding-left: .2rem; }
+
+  .code { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+          padding: 1rem 1.2rem; font-family: var(--f-mono); font-size: .9rem;
+          color: var(--ink); overflow-x: auto; }
+
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .94rem; }
+  th, td { text-align: left; padding: .65rem .85rem; border-bottom: 1px solid var(--line);
+           vertical-align: top; }
+  th { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .08em;
+       text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { white-space: nowrap; }
+  td { color: var(--muted); }
+  td b { color: var(--ink); }
+
+  .chip { display: inline-flex; align-items: center; justify-content: center;
+          min-width: 2.2em; padding: .18em .5em; border-radius: 7px;
+          border: 1px solid var(--line); background: var(--paper);
+          font-family: var(--f-mono); font-size: .86em; font-weight: 700; }
+  .chip.ko { border-color: var(--accent); color: var(--accent); }
+
+  .cards { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 700px) { .cards { grid-template-columns: 1fr 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+          padding: 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+  .card .k { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .1em;
+             text-transform: uppercase; color: var(--accent); }
+  .card p { font-size: .93rem; color: var(--muted); }
+
+  .btn { display: inline-block; padding: .8rem 1.5rem; border-radius: 11px;
+         font-weight: 650; text-decoration: none; border: 1px solid transparent; }
+  .btn.solid { background: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .cta { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+  footer { padding: 2rem 0 3rem; font-size: .88rem; color: var(--muted);
+           display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; border-top: 1px solid var(--line); }
+  footer a { color: var(--muted); }
+</style>
+
+<div class="topbar">
+  <div class="page">
+    <a class="brand" href="./">macbridge</a>
+    <span class="sp"></span>
+    <a class="link" href="./">처음으로</a>
+    <a class="link" href="https://github.com/hjs1761/macbridge-app/releases">다운로드</a>
+    <a class="link" href="license.html">사용 조건</a>
+  </div>
+</div>
+
+<div class="masthead">
+  <div class="page">
+    <div class="inner">
+      <p class="eyebrow">가이드</p>
+      <h1>설치부터 문제 해결까지</h1>
+      <p class="lede">설정 파일을 열 일은 없습니다. 전부 메뉴바에서 됩니다.</p>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <nav class="toc">
+    <a href="#install">설치</a>
+    <a href="#pair">기기 연결</a>
+    <a href="#use">쓰는 법</a>
+    <a href="#menubar">메뉴바 읽기</a>
+    <a href="#settings">설정</a>
+    <a href="#trouble">잘 안될 때</a>
+  </nav>
+</div>
+
+<!-- 설치 -->
+<section class="band" id="install">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">설치</p>
+      <h2>연결할 기기 모두에 설치합니다</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>DMG 를 받습니다</h3>
+        <p><a href="https://github.com/hjs1761/macbridge-app/releases">Releases</a> 에서
+           <code>MacBridge-x.y.dmg</code></p>
+      </li>
+      <li>
+        <h3>응용 프로그램으로 드래그</h3>
+        <p>DMG 를 열면 드래그할 자리가 보입니다.</p>
+      </li>
+      <li>
+        <h3>실행합니다</h3>
+        <p>메뉴바에 <span class="chip ko">한</span> 또는 <span class="chip">A</span> 가 뜹니다.
+           동기화 데몬은 앱이 알아서 등록합니다.</p>
+      </li>
+    </ol>
+    <div class="callout warn">
+      <b>"확인할 수 없는 앱" 경고가 뜨면</b> — 베타에는 Apple 공증이 아직 없어서 뜹니다.
+      <b>처음 한 번만</b> 아래를 하면 그다음부터는 그냥 열립니다.
+      <ol class="inline-steps">
+        <li>앱을 <b>한 번 실행해 봅니다.</b> 경고가 뜨면 그대로 닫으세요.
+            <b>이 단계를 건너뛰면 다음 단계에 항목이 나타나지 않습니다.</b></li>
+        <li>시스템 설정 → <b>개인정보 보호 및 보안</b> → 맨 아래 <b>보안</b> 항목까지 스크롤</li>
+        <li>"MacBridge 이(가) 차단되었습니다" 옆 <b>그래도 열기</b> → 암호 입력</li>
+      </ol>
+      ⚠ macOS 15 Sequoia 부터 <b>우클릭 → 열기</b> 방식은 없어졌습니다.
+      다른 곳에서 그 방법을 보셨다면 옛날 안내입니다.
+    </div>
+    <div class="callout tip">
+      <b>메뉴바 아이콘이 안 보인다면</b> — Ice·Bartender 같은 메뉴바 정리 앱을 쓰시나요?
+      새 아이콘이 <b>숨김 영역</b>에 들어갔을 수 있습니다. 숨김 영역을 펼친 뒤
+      <kbd>⌘</kbd> 를 누른 채 드래그해 꺼내면 위치가 유지됩니다.
+    </div>
+  </div>
+</section>
+
+<!-- 기기 연결 -->
+<section class="band sunken" id="pair">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">기기 연결</p>
+      <h2>연결 코드를 한 번 옮기면 됩니다</h2>
+      <p class="lede">기기끼리 같은 연결 코드를 나눠 가져야 서로를 신뢰합니다.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>코드를 만듭니다</h3>
+        <p>이미 설치된 기기에서<br><b>설정 → 기기 → + 새 기기 추가…</b></p>
+      </li>
+      <li>
+        <h3>붙여넣습니다</h3>
+        <p>새 기기에서<br><b>설정 → 기기 → 기존 기기에 연결…</b></p>
+      </li>
+      <li>
+        <h3>끝입니다</h3>
+        <p>연결 코드와 기기 목록이 자동으로 맞춰지고, 나머지 기기들에게도 알아서 인사합니다.</p>
+      </li>
+    </ol>
+    <div class="code">mb1.100.64.0.3.8765.482917</div>
+    <div class="callout">
+      코드는 만드는 순간 <b>클립보드에 자동 복사</b>됩니다.
+      <b>한 번 쓰면 닫히고</b>, 120초가 지나거나 5번 틀리면 폐기되니 그때는 1번부터 다시 하세요.
+    </div>
+  </div>
+</section>
+
+<!-- 쓰는 법 -->
+<section class="band" id="use">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">쓰는 법</p>
+      <h2>평소 쓰시던 대로 바꾸면 됩니다</h2>
+      <p class="lede">양쪽이 같이 바뀝니다. 두 번 누를 필요가 없습니다.</p>
+      <p class="callout tip">
+        macbridge 는 <b>키를 전혀 보지 않습니다</b> — "입력 소스가 바뀌었다"는 신호만 듣습니다.
+        그래서 <kbd>Caps Lock</kbd>, 오른쪽 <kbd>Command</kbd>, 메뉴바 클릭, 직접 매핑한 키 —
+        <b>무엇으로 바꾸든 똑같이 동작합니다.</b> 손쉬운 사용 권한이 필요 없는 이유이기도 합니다.
+      </p>
+    </div>
+    <div class="callout tip">
+      <b><kbd>Ctrl</kbd>+<kbd>Space</kbd> 를 쓰셔도 됩니다.</b>
+      원격 도구에 따라 이 키가 상대 맥으로 넘어가기도 하는데, 그때는 macbridge 가
+      <b>되돌리지 않고 따라갑니다.</b> 어느 쪽이든 언어는 맞습니다.
+    </div>
+    <div class="callout warn">
+      <b>다만 이 키는 상대 맥의 입력을 가끔 꼬이게 합니다.</b>
+      한글 모드인데 영문만 나오거나 자소가 흩어질 때가 있습니다. 둘 중 편한 쪽으로 푸세요 —
+      <ol class="inline-steps">
+        <li><b>메뉴바 → 「지금 정렬」</b> ⭐ 가장 확실합니다.
+            누르는 타이밍을 맞출 필요가 없어서 <b>언제 눌러도 한 번에 됩니다.</b></li>
+        <li><b>캡스락 톡톡</b> — 손이 키보드에 있을 때 빠릅니다.
+            다만 <b>1초 안에 두 번</b>이어야 하고, 지구본 키처럼 느린 키는 놓칠 수 있습니다.</li>
+      </ol>
+      <b>전환 키로 캡스락을 안 쓰셔도 복구 키로는 쓸 수 있습니다</b> —
+      원격 창이 앞에 있어도 로컬에 먹는 유일한 키라서요.
+      <br><br>
+      아예 겪고 싶지 않으시면 이 단축키를 꺼두셔도 됩니다 —
+      시스템 설정 → 키보드 → 키보드 단축키 → 입력 소스 → <b>"이전 입력 소스 선택"</b> 체크 해제.
+    </div>
+
+    <div class="sub">
+      <h3>자소분리가 났을 때</h3>
+      <div class="cards">
+        <div class="card">
+          <span class="k">1순위 · 가만히</span>
+          <h3>1~5초 안에 자동복구</h3>
+          <p>어긋난 걸 감지하면 정렬하고, 창을 한 번 전환해 꼬인 세션을 끊습니다.
+             화면이 한 번 깜빡이면 복구된 겁니다.</p>
+        </div>
+        <div class="card">
+          <span class="k">2순위 · 확실하게</span>
+          <h3>메뉴바 → 「지금 정렬」</h3>
+          <p><b>타이밍을 맞출 필요가 없어 언제 눌러도 한 번에 됩니다.</b>
+             전 기기를 정렬하고 세션을 리셋합니다.</p>
+          <p>안 풀릴 때 기댈 곳은 여기입니다.</p>
+        </div>
+        <div class="card">
+          <span class="k">3순위 · 빠르게</span>
+          <h3>한/영을 톡톡 (1초 내 두 번)</h3>
+          <p>손이 키보드에 있을 때 빠릅니다. <kbd>Caps Lock</kbd> 은
+             <b>원격 창이 앞에 있어도 먹는 유일한 키</b>라 가장 잘 통합니다.</p>
+          <p>⚠ <b>1초 안에 두 번</b>이어야 합니다 — 지구본 키처럼 반응이 느린 키는
+             놓칠 수 있고, 그때는 위의 「지금 정렬」을 쓰세요.</p>
+        </div>
+      </div>
+      <p class="callout">
+        셋 다 결국 <b>같은 일</b>을 합니다 — 한/영을 맞추고 <b>창을 한 번 전환해 꼬인 입력 세션을
+        끊는 것</b>. 손으로 하면 다른 창을 클릭했다 돌아오는 것과 같습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 메뉴바 -->
+<section class="band sunken" id="menubar">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">메뉴바 읽기</p>
+      <h2>아이콘 하나로 상태가 보입니다</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>표시</th><th>뜻</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip ko">한</span> <span class="chip">A</span></td>
+              <td>지금 이 기기의 입력 소스</td></tr>
+          <tr><td><b style="color:var(--alert)">주황색</b></td>
+              <td>연결된 기기 중 <b>나와 다른 게 있다</b></td></tr>
+          <tr><td><b style="color:var(--alert)">⚠</b></td>
+              <td>데몬이 응답하지 않는다</td></tr>
+          <tr><td>● / ○</td><td>기기가 온라인 / 오프라인</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub">
+      <h3>메뉴 항목</h3>
+      <ul class="plain">
+        <li><b>지금 정렬</b> — 전 기기를 내 언어로 맞추고 꼬인 세션을 풉니다.</li>
+        <li><b>IME 동기화</b> — 잠시 끄고 싶을 때.</li>
+        <li><b>연결 테스트</b> — 기기별 왕복 시간. 안 될 때 원인을 좁히는 데 씁니다.</li>
+        <li><b>자소분리 관측 창</b> — 문제를 재현해 기록으로 남길 때.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 설정 -->
+<section class="band" id="settings">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">설정</p>
+      <h2>메뉴바 → 설정… 에서 다 됩니다</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>탭</th><th>할 수 있는 것</th></tr></thead>
+        <tbody>
+          <tr><td><b>일반</b></td><td>기기 이름 · 한/영 자동 동기화 · 자소분리 자동복구 · 로그인 시 자동 시작</td></tr>
+          <tr><td><b>원격 도구</b></td><td>쓰는 원격 앱 고르기. 목록에 없으면 <b>자동 감지</b> 버튼</td></tr>
+          <tr><td><b>기기</b></td><td>연결된 기기 상태 · 추가 · 삭제 · 연결 테스트</td></tr>
+          <tr><td><b>고급</b></td><td>연결 코드 · 포트 · 허용 대역</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sub">
+      <h3>원격 도구를 왜 고르나요</h3>
+      <p class="prose" style="color:var(--muted)">
+        <b style="color:var(--ink)">그 앱으로 원격할 때만</b> 한/영을 맞추기 위해서입니다.
+        안 그러면 로컬에서 일하다 한/영을 바꿔도 다른 기기까지 따라 바뀝니다.
+      </p>
+      <div class="callout tip">
+        목록에 없는 도구를 쓰신다면 <b>+ 지금 쓰는 원격 앱 자동 감지</b> 를 누르고,
+        5초 안에 원격 창을 앞으로 가져오면 알아서 잡습니다. <b>번들 ID 를 몰라도 됩니다.</b>
+      </div>
+      <div class="callout tip">
+        <b>고르는 걸 잊으셨어도 괜찮습니다.</b> 목록에 없는 앱으로 원격하다 한/영이 어긋나면,
+        메뉴바가 먼저 알려 주고 <b>[원격 도구에 추가]</b> 버튼을 띄웁니다.
+        아니라고 답하면 그 앱은 다시 묻지 않습니다.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 문제 해결 -->
+<section class="band sunken" id="trouble">
+  <div class="page">
+    <div class="head prose">
+      <p class="eyebrow">잘 안될 때</p>
+      <h2>연결 테스트부터 눌러 보세요</h2>
+      <p class="lede">기기별 왕복 시간을 재서 원인을 좁혀 줍니다.</p>
+    </div>
+
+    <div class="sub">
+      <h3>상대 기기가 계속 "오프라인"</h3>
+      <p style="color:var(--muted)"><code>❌ 응답 없음</code> 이면 아래 중 하나입니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>원인</th><th>확인</th></tr></thead>
+          <tbody>
+            <tr><td><b>방화벽</b></td>
+                <td>시스템 설정 → 네트워크 → 방화벽. macOS 방화벽은 <b>외부 수신만 조용히 막아서</b>
+                    증상이 "아무 일도 안 일어남"으로만 나타납니다</td></tr>
+            <tr><td>연결 코드 불일치</td><td>설정 → 고급 → 연결 코드가 양쪽 같은지</td></tr>
+            <tr><td>IP 가 바뀜</td><td>설정 → 기기 목록의 주소가 지금 주소와 맞는지</td></tr>
+            <tr><td>상대 기기가 꺼짐</td><td>상대 기기에서 메뉴바 아이콘이 보이는지</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sub">
+      <h3>한/영이 전혀 안 맞춰짐</h3>
+      <p class="prose" style="color:var(--muted)">
+        설정 → <b style="color:var(--ink)">원격 도구</b> 탭에서 지금 쓰는 원격 앱이
+        <b style="color:var(--ink)">체크돼 있는지</b> 보세요.
+        아무것도 안 골랐다면 항상 동기화되고, 엉뚱한 앱만 골랐다면 그 앱을 쓸 때만 동기화됩니다.
+      </p>
+    </div>
+
+    <div class="sub">
+      <h3>잠긴 화면의 기기</h3>
+      <p class="prose" style="color:var(--muted)">
+        화면이 잠긴 맥은 비밀번호 입력을 위해 입력 소스를 영문으로 강제합니다.
+        macbridge 는 그걸 알고 <b style="color:var(--ink)">잠긴 기기는 건드리지 않습니다.</b> 정상 동작입니다.
+      </p>
+    </div>
+
+    <div class="sub">
+      <h3>알아두면 좋은 것</h3>
+      <ul class="plain">
+        <li><b>추가 권한이 필요 없습니다.</b> 키 이벤트를 만들지 않고 각 기기가 자기 입력 소스만 바꾸기 때문입니다.</li>
+        <li><b>한글 조합 중에 전환하면</b> 마지막 글자가 사라질 수 있습니다. macOS 입력기 동작이라 구조적으로 못 없앱니다.</li>
+        <li><kbd>Cmd</kbd>·<kbd>Ctrl</kbd> 이 눌린 채 굳는 건 <b>원격 도구 쪽 문제</b>입니다.
+            각 조합키를 한 번씩 톡 눌렀다 떼면 풀립니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="page">
+    <div class="head prose">
+      <h2>해결되지 않으면 알려 주세요</h2>
+      <p class="lede">
+        <b>메뉴바 → 「문의하기…」</b> 를 쓰시면 됩니다. 무엇이 안 되는지 적고 보내면
+        <b>진단 정보가 함께 첨부</b>돼서, 설명만으로 못 찾던 원인도 대개 바로 보입니다.
+      </p>
+    </div>
+    <div class="callout tip">
+      <b>무엇이 담기는지 보내기 전에 보실 수 있습니다.</b>
+      창의 <b>「무엇이 담기는지 보기」</b> 를 누르면 첨부될 내용이 그대로 나옵니다.
+      <b>연결 코드는 담기지 않고</b>, 기기 이름·IP·다른 앱 이름은 가려서 나갑니다 —
+      원격 도구 이름만 남습니다(그게 있어야 원인을 찾을 수 있어서요).
+      <br><br>
+      앱이 직접 보내지 않습니다. <b>메일 앱이 열리면 내용을 확인하고 직접 보내시면 됩니다.</b>
+      보내주신 정보는 문제 해결에만 쓰고 보관하지 않습니다.
+    </div>
+    <div class="cta">
+      <a class="btn ghost" href="./">처음으로</a>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+  <footer>
+    <span>macbridge</span>
+    <span>© 2026 hjs1761</span>
+    <a href="./">처음으로</a>
+    <a href="license.html">사용 조건</a>
+  </footer>
+</div>
